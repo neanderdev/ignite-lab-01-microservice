@@ -1,0 +1,7 @@
+Ter o docker instalado
+ir até a pasta raiz do projeto e rodar:
+docker-compose up -d
+e depois:
+docker ps
+para verificar se subiu o banco de dados com os serviços do kafka, caso não, rodar novamente
+e está pronto para uso
