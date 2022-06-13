@@ -26,6 +26,7 @@ export class ProductsService {
   async createProduct({ title }: CreateProductParams) {
     const slug = slugify(title, {
       lower: true,
+      remove: /[^a-z0-9]/g,
     });
 
     const productWithSameSlug = await this.prisma.product.findUnique({
