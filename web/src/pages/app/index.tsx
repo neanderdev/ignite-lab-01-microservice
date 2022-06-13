@@ -1,19 +1,48 @@
+import Link from 'next/link';
 import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0';
 
-export default function Home() {
+import { withApollo } from '../../lib/withApollo';
+
+import { useMeQuery } from '../../graphql/generated/graphql';
+import { getServerPageGetProducts, ssrGetProducts } from '../../graphql/generated/page';
+
+function Home({ data }) {
     const { user } = useUser();
+    const { data: me } = useMeQuery();
 
     return (
-        <div>
+        <div className='text-violet-500'>
             <h1>Hello World</h1>
+
+            <pre>
+                ok: {JSON.stringify(me, null, 2)}
+            </pre>
+
+            {/* <pre>
+                {JSON.stringify(data.products, null, 2)}
+            </pre> */}
 
             <pre>
                 {JSON.stringify(user, null, 2)}
             </pre>
 
-            <a href="/api/auth/logout">Logout</a>
+            <Link href="/api/auth/logout">
+                Logout
+            </Link>
         </div>
     );
 }
 
-export const getServerSideProps = withPageAuthRequired();
+export const getServerSideProps = withPageAuthRequired({
+    getServerSideProps: async (ctx) => {
+        //  await getServerPageGetProducts(null, ctx);
+
+        return {
+            props: {},
+        }
+    }
+});
+
+export default withApollo(
+    ssrGetProducts.withPage()(Home)
+);
